@@ -1,15 +1,6 @@
-const mongoose = require("mongoose");
+// ... (previous code)
 
-// Import of the model Recipe from './models/Recipe.model.js'
-const Recipe = require("./models/Recipe.model");
-// Import of the data from './data.json'
-const data = require("./data");
-
-const MONGODB_URI = "mongodb://localhost:27017/recipe-app";
-
-mongoose.set("strictQuery", false);
-
-// Connection to the database "recipe-app"
+// Connect to the database
 mongoose
   .connect(MONGODB_URI)
   .then((x) => {
@@ -33,6 +24,17 @@ mongoose
   })
   .then((createdRecipe) => {
     console.log(`Recipe created with title: ${createdRecipe.title}`);
+
+    // Insert multiple recipes into the database
+    return Recipe.insertMany(data);
+  })
+  .then((insertedRecipes) => {
+    // Print the title of each inserted recipe
+    insertedRecipes.forEach((recipe) => {
+      console.log(`Recipe inserted: ${recipe.title}`);
+    });
+
+
   })
   .catch((error) => {
     console.error("Error connecting to the database", error);
