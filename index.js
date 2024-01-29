@@ -1,3 +1,14 @@
+const mongoose = require("mongoose");
+
+const Recipe = require("./models/Recipe.model");
+
+const data = require("./data");
+
+const MONGODB_URI = "mongodb://localhost:27017/recipe-app";
+
+// Set the strictQuery option to suppress the deprecation warning
+mongoose.set("strictQuery", false);
+
 // ... (previous code)
 
 // Connect to the database
@@ -34,8 +45,27 @@ mongoose
       console.log(`Recipe inserted: ${recipe.title}`);
     });
 
+    // Update the 'Rigatoni alla Genovese' recipe duration to 100
+    return Recipe.findOneAndUpdate(
+      { title: "Rigatoni alla Genovese" },
+      { $set: { duration: 100 } },
+      { new: true } // to get the updated document
+    );
+  })
+  .then((updatedRecipe) => {
+    console.log(`Recipe updated: ${updatedRecipe.title}`);
 
+    // Remove the 'Carrot Cake' recipe from the database
+    return Recipe.deleteOne({ title: "Carrot Cake" });
+  })
+  .then(() => {
+    console.log(`Recipe removed: Carrot Cake`);
+
+    // Close the database connection
+    mongoose.connection.close(() => {
+      console.log("Database connection closed.");
+    });
   })
   .catch((error) => {
-    console.error("Error connecting to the database", error);
+    console.error("Error:", error);
   });
