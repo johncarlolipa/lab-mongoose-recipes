@@ -6,10 +6,8 @@ const data = require("./data");
 
 const MONGODB_URI = "mongodb://localhost:27017/recipe-app";
 
-// Set the strictQuery option to suppress the deprecation warning
 mongoose.set("strictQuery", false);
 
-// ... (previous code)
 
 // Connect to the database
 mongoose
@@ -40,7 +38,7 @@ mongoose
     return Recipe.insertMany(data);
   })
   .then((insertedRecipes) => {
-    // Print the title of each inserted recipe
+
     insertedRecipes.forEach((recipe) => {
       console.log(`Recipe inserted: ${recipe.title}`);
     });
@@ -49,7 +47,7 @@ mongoose
     return Recipe.findOneAndUpdate(
       { title: "Rigatoni alla Genovese" },
       { $set: { duration: 100 } },
-      { new: true } // to get the updated document
+      { new: true }
     );
   })
   .then((updatedRecipe) => {
